@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             ).show();
             etIdProd.requestFocus()
         } else {
+            // Agrega el Producto Directo a la Base de Datos del Servidor
             var jsonEntrada = JSONObject()
             jsonEntrada.put("nomProd", etNomProd.text.toString())
             jsonEntrada.put("existencia", etExistencia.text.toString())
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Carga todos los datos que se encuentra en el servidor
+    // a la Base de Datos del Dispositivo.
     fun getAllProductos(view: View) {
         val wsURL = IP + "/WSAndroid/getProductos.php"
         val admin = AdminBD(this)
@@ -81,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
 
+    // Consulta los datos en la Base de Datos del Dispositivo.
     fun Consultar(view: View) {
         if (etIdProd.text.toString().isEmpty()) {
             etIdProd.setError("Falta ingresar clave del producto")
@@ -102,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Actualiza los Datos del lado del Servidor y en el Dispositivo.
     fun Actualiza(view: View) {
         if (etIdProd.text.toString().isEmpty() ||
             etNomProd.text.toString().isEmpty() ||
@@ -112,14 +117,14 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Falta información de Ingresar", Toast.LENGTH_SHORT).show();
             etIdProd.requestFocus()
         } else {
-            // En Esta Parte Actualiza en el Servidor
+            // Actualiza en la base de datos del Servidor.
             var jsonEntrada = JSONObject()
             jsonEntrada.put("idProd", etIdProd.text.toString())
             jsonEntrada.put("nomProd", etNomProd.text.toString())
             jsonEntrada.put("existencia", etExistencia.text.toString())
             jsonEntrada.put("precio", etPrecio.text.toString())
             sendRequest(IP + "/WSAndroid/updateProducto.php", jsonEntrada)
-            // En esta Parte Actualiza en la base local
+            // Actualiza en la Base de Datos del Dispositivo
             val id = etIdProd.text.toString()
             val nom = etNomProd.text.toString()
             val exi = etExistencia.text.toString()
@@ -145,17 +150,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Elimina los Datos del lado de Servidor y del Dispositivo.
     fun Borrar(view: View) {
         if (etIdProd.text.toString().isEmpty()) {
             etIdProd.setError("Falta ingresar clave del producto")
             Toast.makeText(this, "Falta información del id", Toast.LENGTH_SHORT).show();
             etIdProd.requestFocus()
         } else {
-            // En Esta Parte Elimina en el Servidor
+            // Elimina en la base de datos del Servidor.
             var jsonEntrada = JSONObject()
             jsonEntrada.put("idProd", etIdProd.text.toString())
             sendRequest(IP + "/WSAndroid/deleteProducto.php", jsonEntrada)
-            // En esta Parte Elimina en la base local
+            // Elimina en la Base de Datos del Dispositivo
             val id = etIdProd.text.toString()
             val admin = AdminBD(this)
             val sentencia = "DELETE FROM productos WHERE idProd=$id"
@@ -177,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Limpia las cajas de textos.
     fun Limpiar(view: View) {
         etIdProd.setText("")
         etNomProd.setText("")
@@ -185,6 +192,7 @@ class MainActivity : AppCompatActivity() {
         etIdProd.requestFocus()
     }
 
+    // Busca por el ID del producto en el servidor.
     fun searchIdProd(view: View) {
         val id = etIdProd.text.toString()
         val wsURL = IP + "/WSAndroid/getProducto.php"
